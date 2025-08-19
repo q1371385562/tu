@@ -23,10 +23,9 @@
 <body>
   <div class="nav">
     <div>图片库后台</div>
-    <!-- 相对路径，避免跳到根域名 -->
     <div>
-      <a href=".." class="muted" style="margin-right:12px;text-decoration:none">首页</a>
-      <a href="admin/logout" class="muted" style="text-decoration:none">退出</a>
+      <a href="{{ url_for('index') }}" class="muted" style="margin-right:12px;text-decoration:none">首页</a>
+      <a href="{{ url_for('admin_logout') }}" class="muted" style="text-decoration:none">退出</a>
     </div>
   </div>
 
@@ -41,9 +40,8 @@
 
     <div class="card">
       <h2 style="margin-top:0">上传图片</h2>
-      <!-- 相对路径 / 或使用 url_for('admin_upload') -->
-      <form class="row" action="admin/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept="image/*" required />
+      <form class="row" action="{{ url_for('admin_upload') }}" method="post" enctype="multipart/form-data">
+        <input type="file" name="files" accept="image/*" required multiple />
         <input type="text" name="title" placeholder="标题（可选）" />
         <input type="date" name="date" />
         <button type="submit">上传</button>
@@ -58,18 +56,16 @@
         {% for r in rows %}
           <tr>
             <td>{{ r.id }}</td>
-            <td><img class="thumb" src="static/uploads/thumbs/{{ r.filename_thumb }}" alt=""></td>
+            <td><img class="thumb" src="{{ url_for('static', filename='uploads/thumbs/' ~ r.filename_thumb) }}" alt=""></td>
             <td>{{ r.title }}</td>
             <td>{{ r.date }}</td>
             <td>
-              <!-- 更新：相对路径 -->
-              <form class="inline" action="admin/update/{{ r.id }}" method="post">
+              <form class="inline" action="{{ url_for('admin_update', pid=r.id) }}" method="post">
                 <input type="text" name="title" placeholder="新标题" />
                 <input type="date" name="date" />
                 <button type="submit">更新</button>
               </form>
-              <!-- 删除：相对路径 -->
-              <form class="inline" action="admin/delete/{{ r.id }}" method="post"
+              <form class="inline" action="{{ url_for('admin_delete', pid=r.id) }}" method="post"
                     onsubmit="return confirm('确定删除？')">
                 <button type="submit" style="background:#ef4444">删除</button>
               </form>

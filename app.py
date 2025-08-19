@@ -150,7 +150,7 @@ def login_alias():
         if (request.form.get('password') or '') == ADMIN_PASSWORD:
             session['authed'] = True
             flash('登录成功', 'ok')
-            return redirect('admin')
+            return redirect(url_for('admin'))
         flash('密码错误', 'err')
     return render_template('login.html')
 
@@ -161,7 +161,7 @@ def admin_login():
         if (request.form.get('password') or '') == ADMIN_PASSWORD:
             session['authed'] = True
             flash('登录成功', 'ok')
-            return redirect('admin')
+            return redirect(url_for('admin'))
         flash('密码错误', 'err')
     return render_template('login.html')
 
@@ -170,14 +170,14 @@ def admin_login():
 def admin_logout():
     session.pop('authed', None)
     flash('已退出登录', 'ok')
-    return redirect('login')
+    return redirect(url_for('login_alias'))
 
 # ---------------- 后台面板与 CRUD ----------------
 
 @app.route('/admin', methods=['GET'])
 def admin():
     if not session.get('authed'):
-        return redirect('login')
+        return redirect(url_for('login_alias'))
     with get_db() as conn:
         rows = conn.execute('SELECT * FROM photos ORDER BY id DESC').fetchall()
     return render_template('admin.html', rows=rows)
@@ -186,58 +186,61 @@ def admin():
 @app.route('/admin/upload', methods=['POST'])
 def admin_upload():
     if not session.get('authed'):
-        return redirect('login')
+        return redirect(url_for('login_alias'))
 
-    file = request.files.get('file')
+    files = request.files.getlist('files')
     title = (request.form.get('title') or '').strip() or '未命名'
     date_str = (request.form.get('date') or '').strip() or tokyo_today_str()
 
-    if not file or file.filename == '':
+    if not files or all(f.filename == '' for f in files):
         flash('请选择要上传的图片', 'err')
-        return redirect('admin')
+        return redirect(url_for('admin'))
 
-    if not allowed_file(file.filename):
-        flash('不支持的图片格式（仅限：jpg/jpeg/png/gif/webp）', 'err')
-        return redirect('admin')
+    successes, errors = [], []
+    for file in files:
+        if not file or file.filename == '':
+            continue
+        if not allowed_file(file.filename):
+            errors.append(f"{file.filename}: 不支持的图片格式")
+            continue
+        try:
+            img = _open_validate(file.stream)
+            web_name = _unique('.jpg')
+            thumb_name = _unique('.jpg')
+            web_path = os.path.join(UPLOAD_DIR_WEB, web_name)
+            thumb_path = os.path.join(UPLOAD_DIR_THUMBS, thumb_name)
 
-    try:
-        img = _open_validate(file.stream)
-        web_name = _unique('.jpg')
-        thumb_name = _unique('.jpg')
-        web_path = os.path.join(UPLOAD_DIR_WEB, web_name)
-        thumb_path = os.path.join(UPLOAD_DIR_THUMBS, thumb_name)
+            _save(img, 2000, web_path, quality=85)  # 展示图
+            _save(img, 700,  thumb_path, quality=80)  # 缩略图
 
-        _save(img, 2000, web_path, quality=85)  # 展示图
-        _save(img, 700,  thumb_path, quality=80)  # 缩略图
+            with get_db() as conn:
+                conn.execute(
+                    'INSERT INTO photos (filename_web, filename_thumb, title, date, uploaded_at) VALUES (?, ?, ?, ?, ?)',
+                    (web_name, thumb_name, title, date_str, datetime.utcnow().isoformat(timespec='seconds') + 'Z')
+                )
+            successes.append(file.filename)
+        except Exception as e:
+            errors.append(f"{file.filename}: {e}")
 
-        with get_db() as conn:
-            conn.execute(
-                'INSERT INTO photos (filename_web, filename_thumb, title, date, uploaded_at) VALUES (?, ?, ?, ?, ?)',
-                (web_name, thumb_name, title, date_str, datetime.utcnow().isoformat(timespec='seconds') + 'Z')
-            )
-        flash('上传成功', 'ok')
-    except Exception as e:
-        flash(f'上传失败：{e}', 'err')
-
-    return redirect('admin')
+    return render_template('upload_success.html', successes=successes, errors=errors)
 
 
 @app.route('/admin/update/<int:pid>', methods=['POST'])
 def admin_update(pid):
     if not session.get('authed'):
-        return redirect('login')
+        return redirect(url_for('login_alias'))
     title = (request.form.get('title') or '').strip() or '未命名'
     date_str = (request.form.get('date') or '').strip() or tokyo_today_str()
     with get_db() as conn:
         conn.execute('UPDATE photos SET title=?, date=? WHERE id=?', (title, date_str, pid))
     flash('已更新', 'ok')
-    return redirect('admin')
+    return redirect(url_for('admin'))
 
 
 @app.route('/admin/delete/<int:pid>', methods=['POST'])
 def admin_delete(pid):
     if not session.get('authed'):
-        return redirect('login')
+        return redirect(url_for('login_alias'))
     with get_db() as conn:
         row = conn.execute('SELECT filename_web, filename_thumb FROM photos WHERE id=?', (pid,)).fetchone()
         if row:
@@ -249,7 +252,7 @@ def admin_delete(pid):
                     pass
             conn.execute('DELETE FROM photos WHERE id=?', (pid,))
     flash('已删除', 'ok')
-    return redirect('admin')
+    return redirect(url_for('admin'))
 
 # ---------------- 错误页（可选） ----------------
 
