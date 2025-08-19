@@ -188,38 +188,41 @@ def admin_upload():
     if not session.get('authed'):
         return redirect('login')
 
-    file = request.files.get('file')
+    files = request.files.getlist('files')
     title = (request.form.get('title') or '').strip() or '未命名'
     date_str = (request.form.get('date') or '').strip() or tokyo_today_str()
 
-    if not file or file.filename == '':
+    if not files or all(f.filename == '' for f in files):
         flash('请选择要上传的图片', 'err')
         return redirect('admin')
 
-    if not allowed_file(file.filename):
-        flash('不支持的图片格式（仅限：jpg/jpeg/png/gif/webp）', 'err')
-        return redirect('admin')
+    successes, errors = [], []
+    for file in files:
+        if not file or file.filename == '':
+            continue
+        if not allowed_file(file.filename):
+            errors.append(f"{file.filename}: 不支持的图片格式")
+            continue
+        try:
+            img = _open_validate(file.stream)
+            web_name = _unique('.jpg')
+            thumb_name = _unique('.jpg')
+            web_path = os.path.join(UPLOAD_DIR_WEB, web_name)
+            thumb_path = os.path.join(UPLOAD_DIR_THUMBS, thumb_name)
 
-    try:
-        img = _open_validate(file.stream)
-        web_name = _unique('.jpg')
-        thumb_name = _unique('.jpg')
-        web_path = os.path.join(UPLOAD_DIR_WEB, web_name)
-        thumb_path = os.path.join(UPLOAD_DIR_THUMBS, thumb_name)
+            _save(img, 2000, web_path, quality=85)  # 展示图
+            _save(img, 700,  thumb_path, quality=80)  # 缩略图
 
-        _save(img, 2000, web_path, quality=85)  # 展示图
-        _save(img, 700,  thumb_path, quality=80)  # 缩略图
+            with get_db() as conn:
+                conn.execute(
+                    'INSERT INTO photos (filename_web, filename_thumb, title, date, uploaded_at) VALUES (?, ?, ?, ?, ?)',
+                    (web_name, thumb_name, title, date_str, datetime.utcnow().isoformat(timespec='seconds') + 'Z')
+                )
+            successes.append(file.filename)
+        except Exception as e:
+            errors.append(f"{file.filename}: {e}")
 
-        with get_db() as conn:
-            conn.execute(
-                'INSERT INTO photos (filename_web, filename_thumb, title, date, uploaded_at) VALUES (?, ?, ?, ?, ?)',
-                (web_name, thumb_name, title, date_str, datetime.utcnow().isoformat(timespec='seconds') + 'Z')
-            )
-        flash('上传成功', 'ok')
-    except Exception as e:
-        flash(f'上传失败：{e}', 'err')
-
-    return redirect('admin')
+    return render_template('upload_success.html', successes=successes, errors=errors)
 
 
 @app.route('/admin/update/<int:pid>', methods=['POST'])
