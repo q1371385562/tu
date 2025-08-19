@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <title>后台管理</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;margin:0;background:#f6f7fb}
+    .nav{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0}
+    .wrap{max-width:1100px;margin:22px auto;padding:0 16px}
+    .card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px 20px;box-shadow:0 2px 6px rgba(0,0,0,.05)}
+    h1{margin:0}
+    .muted{color:#666}
+    .row{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0}
+    input,button{padding:10px 12px;border:1px solid #d1d5db;border-radius:10px}
+    button{background:#2563eb;color:#fff;border:none;cursor:pointer;font-weight:600}
+    table{width:100%;border-collapse:collapse;margin-top:14px}
+    th,td{border-bottom:1px solid #eee;padding:10px 8px;text-align:left;vertical-align:top}
+    img.thumb{height:60px;border-radius:6px}
+    form.inline{display:inline}
+  </style>
+</head>
+<body>
+  <div class="nav">
+    <div>图片库后台</div>
+    <!-- 相对路径，避免跳到根域名 -->
+    <div>
+      <a href=".." class="muted" style="margin-right:12px;text-decoration:none">首页</a>
+      <a href="admin/logout" class="muted" style="text-decoration:none">退出</a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    {% with msgs = get_flashed_messages(with_categories=true) %}
+      {% if msgs %}
+        {% for cat,msg in msgs %}
+          <div class="card" style="margin-bottom:12px;background:#eef6ff">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="card">
+      <h2 style="margin-top:0">上传图片</h2>
+      <!-- 相对路径 / 或使用 url_for('admin_upload') -->
+      <form class="row" action="admin/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept="image/*" required />
+        <input type="text" name="title" placeholder="标题（可选）" />
+        <input type="date" name="date" />
+        <button type="submit">上传</button>
+      </form>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <h2 style="margin-top:0">已上传</h2>
+      <table>
+        <thead><tr><th>ID</th><th>缩略图</th><th>标题</th><th>日期</th><th>操作</th></tr></thead>
+        <tbody>
+        {% for r in rows %}
+          <tr>
+            <td>{{ r.id }}</td>
+            <td><img class="thumb" src="static/uploads/thumbs/{{ r.filename_thumb }}" alt=""></td>
+            <td>{{ r.title }}</td>
+            <td>{{ r.date }}</td>
+            <td>
+              <!-- 更新：相对路径 -->
+              <form class="inline" action="admin/update/{{ r.id }}" method="post">
+                <input type="text" name="title" placeholder="新标题" />
+                <input type="date" name="date" />
+                <button type="submit">更新</button>
+              </form>
+              <!-- 删除：相对路径 -->
+              <form class="inline" action="admin/delete/{{ r.id }}" method="post"
+                    onsubmit="return confirm('确定删除？')">
+                <button type="submit" style="background:#ef4444">删除</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

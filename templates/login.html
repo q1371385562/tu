@@ -1,0 +1,6 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>登录后台</title>
+<style>body{margin:0;display:grid;place-items:center;height:100vh;background:#f6f9ff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}.card{width:min(420px,92vw);background:#fff;border-radius:16px;box-shadow:0 12px 40px rgba(80,100,180,.18);padding:24px}h1{margin:0 0 14px}.muted{color:#666;font-size:13px;margin-bottom:18px}input[type=password]{width:100%;padding:12px 14px;border-radius:10px;border:1px solid #e7e7ef;outline:none}button{margin-top:14px;width:100%;padding:12px 14px;border:0;border-radius:12px;background:#5b8def;color:#fff;font-weight:700;cursor:pointer}.flash{margin-bottom:10px;padding:10px 12px;border-radius:10px;font-size:13px}.ok{background:#ecfff1;color:#117a33}.err{background:#fff3f3;color:#b81414}</style></head>
+<body><div class="card"><h1>后台登录</h1>
+<div class="muted">请输入后台密码。</div>
+{% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}{% for cat, msg in messages %}<div class="flash {{ cat }}">{{ msg }}</div>{% endfor %}{% endif %}{% endwith %}
+<form method="post"><input type="password" name="password" placeholder="输入后台密码" required><button type="submit">登录</button></form></div></body></html>

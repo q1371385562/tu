@@ -1,0 +1,126 @@
+[2025-08-18 08:19:24 +0800] [28875] [INFO] Starting gunicorn 21.2.0
+[2025-08-18 08:19:24 +0800] [28875] [INFO] Listening at: http://127.0.0.1:5001 (28875)
+[2025-08-18 08:19:24 +0800] [28875] [INFO] Using worker: sync
+[2025-08-18 08:19:24 +0800] [28878] [INFO] Booting worker with pid: 28878
+[2025-08-18 08:19:24 +0800] [28878] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/www/wwwroot/www.beierhouse.com/tu/venv/lib64/python3.6/site-packages/gunicorn/arbiter.py", line 609, in spawn_worker
+    worker.init_process()
+  File "/www/wwwroot/www.beierhouse.com/tu/venv/lib64/python3.6/site-packages/gunicorn/workers/base.py", line 134, in init_process
+    self.load_wsgi()
+  File "/www/wwwroot/www.beierhouse.com/tu/venv/lib64/python3.6/site-packages/gunicorn/workers/base.py", line 146, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/www/wwwroot/www.beierhouse.com/tu/venv/lib64/python3.6/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/www/wwwroot/www.beierhouse.com/tu/venv/lib64/python3.6/site-packages/gunicorn/app/wsgiapp.py", line 58, in load
+    return self.load_wsgiapp()
+  File "/www/wwwroot/www.beierhouse.com/tu/venv/lib64/python3.6/site-packages/gunicorn/app/wsgiapp.py", line 48, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/www/wwwroot/www.beierhouse.com/tu/venv/lib64/python3.6/site-packages/gunicorn/util.py", line 371, in import_app
+    mod = importlib.import_module(module)
+  File "/usr/lib64/python3.6/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 994, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 971, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 955, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 665, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 674, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 781, in get_code
+  File "<frozen importlib._bootstrap_external>", line 741, in source_to_code
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/www/wwwroot/www.beierhouse.com/tu/app.py", line 186
+    TPL_INDEX = \"\"\"<!doctype html><html><head><meta charset=utf-8><title>每日相册</title></head><body>
+                                                                                                    ^
+SyntaxError: unexpected character after line continuation character
+[2025-08-18 08:19:24 +0800] [28878] [INFO] Worker exiting (pid: 28878)
+[2025-08-18 08:19:24 +0800] [28875] [ERROR] Worker (pid:28878) exited with code 3
+[2025-08-18 08:19:24 +0800] [28875] [ERROR] Shutting down: Master
+[2025-08-18 08:19:24 +0800] [28875] [ERROR] Reason: Worker failed to boot.
+[2025-08-18 08:22:23 +0800] [29147] [INFO] Starting gunicorn 21.2.0
+[2025-08-18 08:22:23 +0800] [29147] [INFO] Listening at: http://127.0.0.1:5001 (29147)
+[2025-08-18 08:22:23 +0800] [29147] [INFO] Using worker: sync
+[2025-08-18 08:22:23 +0800] [29150] [INFO] Booting worker with pid: 29150
+[2025-08-18 08:22:23 +0800] [29150] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/www/wwwroot/www.beierhouse.com/tu/venv/lib64/python3.6/site-packages/gunicorn/arbiter.py", line 609, in spawn_worker
+    worker.init_process()
+  File "/www/wwwroot/www.beierhouse.com/tu/venv/lib64/python3.6/site-packages/gunicorn/workers/base.py", line 134, in init_process
+    self.load_wsgi()
+  File "/www/wwwroot/www.beierhouse.com/tu/venv/lib64/python3.6/site-packages/gunicorn/workers/base.py", line 146, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/www/wwwroot/www.beierhouse.com/tu/venv/lib64/python3.6/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/www/wwwroot/www.beierhouse.com/tu/venv/lib64/python3.6/site-packages/gunicorn/app/wsgiapp.py", line 58, in load
+    return self.load_wsgiapp()
+  File "/www/wwwroot/www.beierhouse.com/tu/venv/lib64/python3.6/site-packages/gunicorn/app/wsgiapp.py", line 48, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/www/wwwroot/www.beierhouse.com/tu/venv/lib64/python3.6/site-packages/gunicorn/util.py", line 371, in import_app
+    mod = importlib.import_module(module)
+  File "/usr/lib64/python3.6/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 994, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 971, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 955, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 665, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 674, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 781, in get_code
+  File "<frozen importlib._bootstrap_external>", line 741, in source_to_code
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/www/wwwroot/www.beierhouse.com/tu/app.py", line 186
+    TPL_INDEX = \"\"\"<!doctype html><html><head><meta charset=utf-8><title>每日相册</title></head><body>
+                                                                                                    ^
+SyntaxError: unexpected character after line continuation character
+[2025-08-18 08:22:23 +0800] [29150] [INFO] Worker exiting (pid: 29150)
+[2025-08-18 08:22:23 +0800] [29147] [ERROR] Worker (pid:29150) exited with code 3
+[2025-08-18 08:22:23 +0800] [29147] [ERROR] Shutting down: Master
+[2025-08-18 08:22:23 +0800] [29147] [ERROR] Reason: Worker failed to boot.
+[2025-08-18 08:29:54 +0800] [29642] [INFO] Starting gunicorn 21.2.0
+[2025-08-18 08:29:54 +0800] [29642] [INFO] Listening at: http://127.0.0.1:5001 (29642)
+[2025-08-18 08:29:54 +0800] [29642] [INFO] Using worker: sync
+[2025-08-18 08:29:54 +0800] [29649] [INFO] Booting worker with pid: 29649
+[2025-08-18 08:29:54 +0800] [29649] [ERROR] Exception in worker process
+Traceback (most recent call last):
+  File "/www/wwwroot/www.beierhouse.com/tu/venv/lib64/python3.6/site-packages/gunicorn/arbiter.py", line 609, in spawn_worker
+    worker.init_process()
+  File "/www/wwwroot/www.beierhouse.com/tu/venv/lib64/python3.6/site-packages/gunicorn/workers/base.py", line 134, in init_process
+    self.load_wsgi()
+  File "/www/wwwroot/www.beierhouse.com/tu/venv/lib64/python3.6/site-packages/gunicorn/workers/base.py", line 146, in load_wsgi
+    self.wsgi = self.app.wsgi()
+  File "/www/wwwroot/www.beierhouse.com/tu/venv/lib64/python3.6/site-packages/gunicorn/app/base.py", line 67, in wsgi
+    self.callable = self.load()
+  File "/www/wwwroot/www.beierhouse.com/tu/venv/lib64/python3.6/site-packages/gunicorn/app/wsgiapp.py", line 58, in load
+    return self.load_wsgiapp()
+  File "/www/wwwroot/www.beierhouse.com/tu/venv/lib64/python3.6/site-packages/gunicorn/app/wsgiapp.py", line 48, in load_wsgiapp
+    return util.import_app(self.app_uri)
+  File "/www/wwwroot/www.beierhouse.com/tu/venv/lib64/python3.6/site-packages/gunicorn/util.py", line 371, in import_app
+    mod = importlib.import_module(module)
+  File "/usr/lib64/python3.6/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 994, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 971, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 955, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 665, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 674, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 781, in get_code
+  File "<frozen importlib._bootstrap_external>", line 741, in source_to_code
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/www/wwwroot/www.beierhouse.com/tu/app.py", line 2
+    cp -a app.py app.py.bak.$(date +%s) 2>/dev/null || true
+            ^
+SyntaxError: invalid syntax
+[2025-08-18 08:29:54 +0800] [29649] [INFO] Worker exiting (pid: 29649)
+[2025-08-18 08:29:54 +0800] [29642] [ERROR] Worker (pid:29649) exited with code 3
+[2025-08-18 08:29:54 +0800] [29642] [ERROR] Shutting down: Master
+[2025-08-18 08:29:54 +0800] [29642] [ERROR] Reason: Worker failed to boot.
+[2025-08-18 10:23:14 +0800] [6790] [INFO] Starting gunicorn 21.2.0
+[2025-08-18 10:23:14 +0800] [6790] [ERROR] Connection in use: ('127.0.0.1', 5001)
+[2025-08-18 10:23:14 +0800] [6790] [ERROR] Retrying in 1 second.
+[2025-08-18 10:23:15 +0800] [6790] [ERROR] Connection in use: ('127.0.0.1', 5001)
+[2025-08-18 10:23:15 +0800] [6790] [ERROR] Retrying in 1 second.
+[2025-08-18 10:23:16 +0800] [6790] [ERROR] Connection in use: ('127.0.0.1', 5001)
+[2025-08-18 10:23:16 +0800] [6790] [ERROR] Retrying in 1 second.
+[2025-08-18 10:23:17 +0800] [6790] [ERROR] Connection in use: ('127.0.0.1', 5001)
+[2025-08-18 10:23:17 +0800] [6790] [ERROR] Retrying in 1 second.
+[2025-08-18 10:23:18 +0800] [6790] [ERROR] Connection in use: ('127.0.0.1', 5001)
+[2025-08-18 10:23:18 +0800] [6790] [ERROR] Retrying in 1 second.
+[2025-08-18 10:23:19 +0800] [6790] [ERROR] Can't connect to ('127.0.0.1', 5001)

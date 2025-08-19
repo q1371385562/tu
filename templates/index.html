@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>每日相册</title>
+<style>
+:root{--fg:#111;--muted:#666;--bg:#fafafa;--card:#fff;--accent:#5b8def}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--fg);background:linear-gradient(180deg,#f7f9ff,#fafafa)}
+.container{max-width:1100px;margin:0 auto;padding:24px}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+h1{font-size:28px;margin:0}
+.sub{color:var(--muted);font-size:14px}
+.day{margin:28px 0}
+.day h2{font-size:18px;color:#222;margin:12px 0 16px}
+.grid{column-count:1;column-gap:14px}
+@media(min-width:520px){.grid{column-count:2}}
+@media(min-width:900px){.grid{column-count:3}}
+.card{break-inside:avoid;background:var(--card);border-radius:14px;box-shadow:0 6px 20px rgba(20,40,120,.08);margin:0 0 14px;overflow:hidden;border:1px solid rgba(0,0,0,.04)}
+.card a{display:block;text-decoration:none;outline:none}
+.card img{display:block;width:100%;height:auto;cursor:zoom-in}
+.meta{padding:10px 12px}
+.title{font-weight:600}
+.muted{color:var(--muted);font-size:12px}
+
+/* 轻量灯箱 */
+.viewer{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;z-index:9999}
+.viewer img{max-width:92vw;max-height:92vh;border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+.viewer.show{display:flex}
+.viewer:after{content:"✕";position:absolute;top:16px;right:22px;color:#fff;font-size:22px;opacity:.9}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <div>
+    <h1>每日相册</h1>
+    <div class="sub">按天分组 · 点击图片可放大预览</div>
+  </div>
+  <!-- 相对路径，保持在 /tu/ 下 -->
+  <a href="admin">后台</a>
+</header>
+
+{% if groups|length == 0 %}
+  <p class="sub">还没有照片，去后台上传一张吧。</p>
+{% endif %}
+
+{% for g in groups %}
+<section class="day">
+  <h2>{{ g.date|cn_date }}</h2>
+  <div class="grid">
+    {% for p in g['items'] %}
+    <article class="card">
+      <!-- 外层 a：允许右键/在新标签打开原图 -->
+      <a href="{{ url_for('static', filename='uploads/web/' + p.filename_web) }}" target="_blank" rel="noopener">
+        <img
+          loading="lazy"
+          src="{{ url_for('static', filename='uploads/thumbs/' + p.filename_thumb) }}"
+          alt="{{ p.title }}"
+          data-full="{{ url_for('static', filename='uploads/web/' + p.filename_web) }}"
+        >
+      </a>
+      <div class="meta">
+        <div class="title">{{ p.title }}</div>
+        <div class="muted">上传于 {{ p.uploaded_at.replace('T',' ').replace('Z',' UTC') }}</div>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endfor %}
+</div>
+
+<!-- 灯箱容器 -->
+<div id="viewer" class="viewer" aria-hidden="true">
+  <img id="viewerImg" src="" alt="">
+</div>
+
+<script>
+  // 点击缩略图 -> 页面内放大；点击遮罩关闭
+  (function () {
+    var viewer = document.getElementById('viewer');
+    var vImg = document.getElementById('viewerImg');
+    document.addEventListener('click', function (e) {
+      // 只在点击到缩略图时触发（带 data-full）
+      var img = e.target.closest('img[data-full]');
+      if (img) {
+        e.preventDefault(); // 阻止 a 标签直接跳新标签，让我们先预览
+        vImg.src = img.getAttribute('data-full');
+        viewer.classList.add('show');
+        return;
+      }
+      // 点遮罩任意处关闭
+      if (e.target === viewer || e.target === vImg) {
+        viewer.classList.remove('show');
+        vImg.src = '';
+      }
+    });
+    // ESC 关闭
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        viewer.classList.remove('show');
+        vImg.src = '';
+      }
+    });
+  })();
+</script>
+</body>
+</html>
