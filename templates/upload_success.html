@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <title>上传完成</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;margin:0;background:#f6f7fb}
+    .wrap{max-width:700px;margin:40px auto;padding:0 16px}
+    .card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:20px;box-shadow:0 2px 6px rgba(0,0,0,.05)}
+    ul{padding-left:20px}
+    a.button{display:inline-block;margin-top:12px;padding:10px 14px;background:#2563eb;color:#fff;border-radius:10px;text-decoration:none}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1 style="margin-top:0">上传完成</h1>
+      {% if successes %}
+      <p>成功上传 {{ successes|length }} 张图片：</p>
+      <ul>
+        {% for name in successes %}
+        <li>{{ name }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% if errors %}
+      <p>以下文件上传失败：</p>
+      <ul>
+        {% for err in errors %}
+        <li>{{ err }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      <a class="button" href="{{ url_for('admin') }}">返回后台</a>
+    </div>
+  </div>
+</body>
+</html>

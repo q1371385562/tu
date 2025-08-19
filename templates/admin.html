@@ -43,7 +43,7 @@
       <h2 style="margin-top:0">上传图片</h2>
       <!-- 相对路径 / 或使用 url_for('admin_upload') -->
       <form class="row" action="admin/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept="image/*" required />
+        <input type="file" name="files" accept="image/*" required multiple />
         <input type="text" name="title" placeholder="标题（可选）" />
         <input type="date" name="date" />
         <button type="submit">上传</button>
